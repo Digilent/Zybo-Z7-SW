@@ -13,9 +13,6 @@ set arch "32-bit"
 set os "standalone"
 set proc "ps7_cortexa9_0"
 
-# Destination platform needs to be made active first
-platform active "design_1_wrapper"
-
 domain create -name $domain_name -proc $proc -arch $arch -os $os
 
 # Customize BSP, this replaces *.mss file
@@ -35,5 +32,4 @@ bsp config archiver "arm-none-eabi-ar"
 bsp config assembler "arm-none-eabi-as"
 bsp config compiler "arm-none-eabi-gcc"
 bsp config compiler_flags "-O2 -c"
-bsp config dependency_flags "-MMD -MP"
 bsp config extra_compiler_flags "-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostartfiles -g -Wall -Wextra"

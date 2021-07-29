@@ -63,7 +63,9 @@
  */
 DisplayCtrl dispCtrl;
 XAxiVdma vdma;
-VideoCapture videoCapt;
+VideoCapture videoCapt;//no need for volatile because the videoCapt's state is either checked just one time
+//in functions VideoStart and VideoStop, or (in the DemoGetInactiveFrame function) the worst case scenario is
+//loosing the frame with the inverted colors of the frame gotten from the disconnected input
 INTC intc;
 char fRefresh; //flag used to trigger a refresh of the Menu on video detect
 
@@ -207,7 +209,6 @@ void DemoRun()
 		{
 			userInput = 'r';
 		}
-		Xil_DCacheInvalidateRange((unsigned int) 0x00118380, DEMO_MAX_FRAME);
 
 		switch (userInput)
 		{

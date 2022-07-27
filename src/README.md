@@ -59,6 +59,3 @@ As mentioned above, you MUST test the checkout process and check the generated s
 The checkin script is *not* perfect, and manual intervention is likely to be required after the script is run. Edit the automatically generated scripts as needed, and double check your source files.
 
 ----
-
-This README.md was created by the following commit hash:
-845733c0234a3288d24afdd4148d8f14d4af8973

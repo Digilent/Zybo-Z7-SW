@@ -93,6 +93,9 @@ extern void xil_printf(const char *format, ...);
 
 
 /************************** Variable Definitions *****************************/
+// This variable holds the demo related settings
+volatile sDemo_t Demo;
+
 /*
  * Device instance definitions
  */

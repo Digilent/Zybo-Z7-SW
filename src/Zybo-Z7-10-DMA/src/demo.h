@@ -113,6 +113,6 @@ typedef struct {
 
 
 // This variable holds the demo related settings
-volatile sDemo_t Demo;
+extern volatile sDemo_t Demo;
 
 #endif /* MAIN_H_ */

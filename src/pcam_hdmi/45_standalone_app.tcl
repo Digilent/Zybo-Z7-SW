@@ -21,7 +21,7 @@ set sysproj "pcam_hdmi_system"
 
 # Handle dependent variables
 if {$lang == "c"} {
-	set template "Empty Application(C)"
+	set template "Empty Application"
 } elseif {$lang == "c++"} {
 	set template "Empty Application (C++)"
 } else {

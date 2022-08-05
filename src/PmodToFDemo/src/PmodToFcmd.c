@@ -23,7 +23,8 @@
 /* Revision History:                                                             */
 /*                                                                               */
 /*    09/23/2019(anamariabalas):   Created                                       */
-/*    09/23/2019(anamariabalas): Validated for Vivado 2019.1                     */
+/*    09/23/2019(anamariabalas): Validated for Vivado 2019.1					 */
+/*	  05/08/2022(raduvele): Modified the I/O format							     */
 /*                                                                               */
 /*********************************************************************************/
 
@@ -39,15 +40,15 @@
 #include "sleep.h"
 
 #define MAX_CMD_LENGTH			100
-
+#define MAX_DIST_LENGTH			5
 
 /********************* Global Constant Definitions ***************************/
 const cmd_map_t uartCommands[] = {
-	{"ToFStartCalib",   		CMD_StartCalib},
-	{"ToFReadSerialNo",   	CMD_ReadSerialNo},
-	{"ToFMeasure",   	CMD_Measure},
-	{"ToFSaveCalib",   	CMD_SaveCalibToEprom},
-	{"ToFRestoreFactCalib",   	CMD_RestoreFactCalib}
+	{'c',   	CMD_StartCalib},
+	{'n',   	CMD_ReadSerialNo},
+	{'m',   	CMD_Measure},
+	{'s',   	CMD_SaveCalibToEprom},
+	{'r',   	CMD_RestoreFactCalib}
 
 
 
@@ -57,10 +58,10 @@ const cmd_map_t uartCommands[] = {
 /********************* Global Variables Definitions ***************************/
 
 char *pszLastErr;
+char readDistance[MAX_DIST_LENGTH];
 
 // variables used in multiple functions// allocate them only once.
 char szVal[20];
-//char szRefVal[20];
 int dMeasuredVal, N = 100;
 
 /* ************************************************************************** */
@@ -69,7 +70,7 @@ int dMeasuredVal, N = 100;
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-cmd_key_t PmodToFCMD_CmdDecode(char *szCmd);
+cmd_key_t PmodToFCMD_CmdDecode(char inputOption);
 void PmodToFCMD_ProcessCmd(cmd_key_t keyCmd);
 char* PmodToFCMD_CmdGetNextArg();
 u8 PmodToFCMD_CmdReadSerialNo();
@@ -80,7 +81,7 @@ void PmodToFCMD_MeasureCmd();
 /***	PmodToFCMD_CheckForCommand()
 **
 **	Parameters:
-**          none
+**          char inputOption		- the character corresponding to the command selected by the user
 **
 **
 **	Return Value:
@@ -91,18 +92,11 @@ void PmodToFCMD_MeasureCmd();
 **      It compares the received command with the commands defined in the commands array. If recognized, the command is processed accordingly.
 **
 */
-void PmodToFCMD_CheckForCommand()
+void PmodToFCMD_CheckForCommand(char inputOption)
 {
-    char uartCmd[MAX_RCVCMD_LEN];
-    int cchi;
-    cchi = UART_GetString(uartCmd, MAX_RCVCMD_LEN);
-    if(cchi > 0)
-    {
-	    sprintf(szMsg, "Received command: %s\r\n", uartCmd);
-	    UART_PutString(szMsg);
-	    PmodToFCMD_ProcessCmd(PmodToFCMD_CmdDecode(uartCmd));
-    }
-
+	sprintf(szMsg, "Received command: %c\r\n", inputOption);
+	xil_printf("%s\r\n", szMsg);
+	PmodToFCMD_ProcessCmd(PmodToFCMD_CmdDecode(inputOption));
 }
 
 /* ************************************************************************** */
@@ -116,7 +110,7 @@ void PmodToFCMD_CheckForCommand()
 /***	PmodToFCMD_CmdDecode
 **
 **	Parameters:
-**		char *szCmd       - zero terminated string that contains the command to be searched
+**		char inputOption       - character that represents the chosen command
 **
 **	Return Value:
 **          cmd_key_t - the command enumeration value for the found command, or INVALID if command was not found.
@@ -128,31 +122,24 @@ void PmodToFCMD_CheckForCommand()
 **      If the command is not found, INVALID enumeration value is returned.
 **
 */
-cmd_key_t PmodToFCMD_CmdDecode(char *szCmd)
+cmd_key_t PmodToFCMD_CmdDecode(char inputOption)
 {
 
 	int idxCmd;
-	char* szJustCmd = strtok(szCmd, ","); // the following calls to strtok function will continue from this point.
-	pszLastErr[0] = 0;  // empty last error string
 
-	if (szJustCmd)
+	for(idxCmd = 0; idxCmd < sizeof(uartCommands)/sizeof(uartCommands[0]); idxCmd++)
 	{
-		// compare string with values from array of defined commands
-		for(idxCmd = 0; idxCmd < sizeof(uartCommands)/sizeof(uartCommands[0]); idxCmd++)
-        {
-			if(!strcmp(szJustCmd, uartCommands[idxCmd].pchCmd))
-            {
-				return uartCommands[idxCmd].eCmd;
-			}
+		if(inputOption == uartCommands[idxCmd].pchCmd)
+		{
+			return uartCommands[idxCmd].eCmd;
 		}
-		strcpy(pszLastErr,"Unrecognized command:");
-		strcat(pszLastErr, szJustCmd);
-	}
-	else
-	{
-		strcpy(pszLastErr,"Empty command");
 	}
 
+	if(inputOption == 'q') {
+		return INVALID;
+	}
+
+	xil_printf("Unrecognized command\r\n");
 	return INVALID;
 }
 
@@ -248,18 +235,26 @@ u8 PmodToFCMD_CmdReadSerialNo()
 **	Return Value:
 **          char *  string containing next command argument
 **
-**	Description:
-**		This function is used to tokenize a command in order to retrieve the next argument, using strtok
-**      function, considering arguments as tokens separated by comma character.
-**      Calling the function repeatedly will cycle through the arguments, returning NULL when
-**      the end is reached.
-**      It must be called immediately after CmdDecode, once for every argument expected. No calls to
-**      strtok is permitted in the mean time.
+**	Description: soon
+**
 **
 */
 char* PmodToFCMD_CmdGetNextArg()
 {
-	return strtok(NULL,",");
+	xil_printf("Input the manual calibration distance: ");
+	char readDigit = 0;
+	int distArrLength = 0;
+
+	while(readDigit != 13) //reading ends with an enter
+	{
+		readDigit = getchar();
+		putchar(readDigit);
+		readDistance[distArrLength] = readDigit;
+		distArrLength++;
+	}
+
+	readDistance[distArrLength] = '\0'; //null-ended string
+	return readDistance;
 }
 
 

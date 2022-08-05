@@ -18,6 +18,7 @@
 /*                                                                            */
 /*    09/23/2019(anamariabalas):   Created                                    */
 /*    09/23/2019(anamariabalas): Validated for Vivado 2019.1                  */
+/*	  05/08/2022(raduvele): Modified the I/O format							  */
 /*                                                                            */
 /******************************************************************************/
 #ifndef CMD_H_
@@ -43,14 +44,14 @@ typedef enum {
 
 // structure mapping command key to command string
 typedef struct {
-	char *pchCmd;
+	char pchCmd;
 	cmd_key_t eCmd;
 } cmd_map_t;
 /************************** Definitions ******************************/
 
 /************************** Function Prototypes ******************************/
 
-void PmodToFCMD_CheckForCommand();
+void PmodToFCMD_CheckForCommand(char inputOption);
 
 
 

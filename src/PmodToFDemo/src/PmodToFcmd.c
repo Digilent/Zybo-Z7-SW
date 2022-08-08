@@ -1,4 +1,3 @@
-
 /*********************************************************************************/
 /*                                                                               */
 /* PmodToFCMD.c -- PmodToFCMD module                                             */
@@ -49,9 +48,6 @@ const cmd_map_t uartCommands[] = {
 	{'m',   	CMD_Measure},
 	{'s',   	CMD_SaveCalibToEprom},
 	{'r',   	CMD_RestoreFactCalib}
-
-
-
 };
 
 
@@ -233,9 +229,10 @@ u8 PmodToFCMD_CmdReadSerialNo()
 **		<none>
 **
 **	Return Value:
-**          char *  string containing next command argument
+**          char *  string containing the parameter for ToFStartCalib
 **
-**	Description: soon
+**	Description:
+**		This function retrieves the calibration distance from the user. The calibration distance is used in the ToFStartCalib command.
 **
 **
 */

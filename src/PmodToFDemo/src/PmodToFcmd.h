@@ -39,10 +39,9 @@ typedef enum {
 	CMD_Measure,
 	CMD_SaveCalibToEprom,
 	CMD_RestoreFactCalib
-
 } cmd_key_t;
 
-// structure mapping command key to command string
+// structure mapping command key to command character
 typedef struct {
 	char pchCmd;
 	cmd_key_t eCmd;
@@ -52,7 +51,5 @@ typedef struct {
 /************************** Function Prototypes ******************************/
 
 void PmodToFCMD_CheckForCommand(char inputOption);
-
-
 
 #endif /* CMD_H_ */

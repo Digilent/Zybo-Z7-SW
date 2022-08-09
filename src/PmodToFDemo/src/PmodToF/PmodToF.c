@@ -30,6 +30,7 @@
 /*                                                                               */
 /*    09/23/2019(anamariabalas):   Created                                       */
 /*    09/23/2019(anamariabalas): Validated for Vivado 2019.1                     */
+/*	  08/09/2022(raduvele): Fixed multiple definition issue                      */
 /*                                                                               */
 /*********************************************************************************/
 
@@ -55,6 +56,11 @@ EPROM myEPROMDevice;
 XGpio gpio;
 CALIBDATA calib;
 SERIALNODATA serialNo ;
+
+/* ------------------------------------------------------------ */
+/*		Definitions  	                                        */
+/* ------------------------------------------------------------ */
+char szMsg[400];
 
 
 /* ------------------------------------------------------------ */

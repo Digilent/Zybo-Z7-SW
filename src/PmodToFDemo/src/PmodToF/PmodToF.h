@@ -23,6 +23,7 @@
 /*                                                                            */
 /*    09/23/2019(anamariabalas):   Created                                    */
 /*    09/23/2019(anamariabalas): Validated for Vivado 2019.1                  */
+/*	  08/09/2022(raduvele): Fixed multiple definition issue                   */
 /*                                                                            */
 /******************************************************************************/
 
@@ -42,7 +43,7 @@
 
 
 /* ------------------------------------------------------------ */
-/*		7 bit Chip Addresses		                                */
+/*		7 bit Chip Addresses		                            */
 /* ------------------------------------------------------------ */
 
 //EEPROM chip address
@@ -59,9 +60,9 @@
 #define ADR_EPROM_FACTCALIB	32					//Factory calibration base address : 0x20
 
 /* ------------------------------------------------------------ */
-/*		Definitions	                                    */
+/*		Declarations	                                    */
 /* ------------------------------------------------------------ */
-char szMsg[400];
+extern char szMsg[400]; //declared but not defined
 
 /* ------------------------------------------------------------ */
 /*				Constants						            	*/

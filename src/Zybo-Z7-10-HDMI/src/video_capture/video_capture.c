@@ -246,7 +246,7 @@ int VideoStart(VideoCapture *videoPtr)
 **		can all be called at will.
 **
 */
-int VideoInitialize(VideoCapture *videoPtr, INTC *intCtrl, XAxiVdma *vdma, u16 gpioId, u16 vtcId, u32 vtcIrptId, u8 *framePtr[VIDEO_NUM_FRAMES], u32 stride, u32 startOnDet)
+int VideoInitialize(VideoCapture *videoPtr, INTC *intCtrl, XAxiVdma *vdma, u32 gpioId, u32 vtcId, u32 vtcIrptId, u8 *framePtr[VIDEO_NUM_FRAMES], u32 stride, u32 startOnDet)
 {
 	int Status;
 	int i;

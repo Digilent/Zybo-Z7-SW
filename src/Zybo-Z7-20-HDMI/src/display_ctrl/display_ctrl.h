@@ -98,7 +98,7 @@ typedef struct {
 
 int DisplayStop(DisplayCtrl *dispPtr);
 int DisplayStart(DisplayCtrl *dispPtr);
-int DisplayInitialize(DisplayCtrl *dispPtr, XAxiVdma *vdma, u16 vtcId, u32 dynClkAddr, u8 *framePtr[DISPLAY_NUM_FRAMES], u32 stride);
+int DisplayInitialize(DisplayCtrl *dispPtr, XAxiVdma *vdma, u32 vtcId, u32 dynClkAddr, u8 *framePtr[DISPLAY_NUM_FRAMES], u32 stride);
 int DisplaySetMode(DisplayCtrl *dispPtr, const VideoMode *newMode);
 int DisplayChangeFrame(DisplayCtrl *dispPtr, u32 frameIndex);
 

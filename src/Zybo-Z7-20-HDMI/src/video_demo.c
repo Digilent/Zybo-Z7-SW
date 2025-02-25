@@ -44,15 +44,15 @@
 /*
  * XPAR redefines
  */
-#define DYNCLK_BASEADDR 		XPAR_AXI_DYNCLK_0_S_AXI_LITE_BASEADDR
-#define VDMA_ID 				XPAR_AXIVDMA_0_DEVICE_ID
-#define HDMI_OUT_VTC_ID 		XPAR_V_TC_OUT_DEVICE_ID
-#define HDMI_IN_VTC_ID 			XPAR_V_TC_IN_DEVICE_ID
-#define HDMI_IN_GPIO_ID 		XPAR_AXI_GPIO_VIDEO_DEVICE_ID
-#define HDMI_IN_VTC_IRPT_ID 	XPAR_FABRIC_V_TC_IN_IRQ_INTR
-#define HDMI_IN_GPIO_IRPT_ID 	XPAR_FABRIC_AXI_GPIO_VIDEO_IP2INTC_IRPT_INTR
-#define SCU_TIMER_ID 			XPAR_SCUTIMER_DEVICE_ID
-#define UART_BASEADDR 			XPAR_PS7_UART_1_BASEADDR
+#define DYNCLK_BASEADDR 		XPAR_AXI_DYNCLK_0_BASEADDR
+#define VDMA_ID 				XPAR_AXI_VDMA_0_BASEADDR
+#define HDMI_OUT_VTC_ID 		XPAR_V_TC_OUT_BASEADDR
+#define HDMI_IN_VTC_ID 			XPAR_V_TC_IN_BASEADDR
+#define HDMI_IN_GPIO_ID 		XPAR_AXI_GPIO_VIDEO_BASEADDR
+#define HDMI_IN_VTC_IRPT_ID 	XPAR_FABRIC_V_TC_IN_INTR
+#define HDMI_IN_GPIO_IRPT_ID 	XPAR_FABRIC_AXI_GPIO_VIDEO_INTR
+#define SCU_TIMER_ID 			XPAR_SCUTIMER_BASEADDR
+#define UART_BASEADDR 			XPAR_UART1_BASEADDR
 
 /* ------------------------------------------------------------ */
 /*				Global Variables								*/
@@ -135,7 +135,7 @@ void DemoInitialize()
 	/*
 	 * Initialize the Display controller and start it
 	 */
-	Status = DisplayInitialize(&dispCtrl, &vdma, HDMI_OUT_VTC_ID, DYNCLK_BASEADDR, pFrames, DEMO_STRIDE);
+	Status = DisplayInitialize(&dispCtrl, &vdma, 0, DYNCLK_BASEADDR, pFrames, DEMO_STRIDE);
 	if (Status != XST_SUCCESS)
 	{
 		xil_printf("Display Ctrl initialization failed during demo initialization%d\r\n", Status);

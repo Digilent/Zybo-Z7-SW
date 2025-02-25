@@ -55,7 +55,7 @@ XScuTimer TimerInstance;	/* Cortex A9 Scu Private Timer Instance */
 **				 error.
 **
 */
-int TimerInitialize(u16 TimerDeviceId)
+int TimerInitialize(u32 TimerDeviceId)
 {
 	int Status;
 	XScuTimer *TimerInstancePtr = &TimerInstance;

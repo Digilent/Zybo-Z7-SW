@@ -31,13 +31,13 @@
 /*					Miscellaneous Declarations					*/
 /* ------------------------------------------------------------ */
 
-#define TIMER_FREQ_HZ (XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2)
+#define TIMER_FREQ_HZ (XPAR_CPU_CORE_CLOCK_FREQ_HZ / 2)
 
 /* ------------------------------------------------------------ */
 /*					Procedure Declarations						*/
 /* ------------------------------------------------------------ */
 
-int TimerInitialize(u16 TimerDeviceId);
+int TimerInitialize(u32 TimerDeviceId);
 void TimerDelay(u32 uSDelay);
 
 /* ------------------------------------------------------------ */

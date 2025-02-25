@@ -309,7 +309,7 @@ int DisplayStart(DisplayCtrl *dispPtr)
 **		Initializes the driver struct for use.
 **
 */
-int DisplayInitialize(DisplayCtrl *dispPtr, XAxiVdma *vdma, u16 vtcId, u32 dynClkAddr, u8 *framePtr[DISPLAY_NUM_FRAMES], u32 stride)
+int DisplayInitialize(DisplayCtrl *dispPtr, XAxiVdma *vdma, u32 vtcId, u32 dynClkAddr, u8 *framePtr[DISPLAY_NUM_FRAMES], u32 stride)
 {
 	int Status;
 	int i;

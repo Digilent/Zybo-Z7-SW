@@ -21,6 +21,8 @@
 #ifndef VGA_MODES_H_
 #define VGA_MODES_H_
 
+#include <xil_types.h>
+
 typedef struct {
 	char label[64]; /* Label describing the resolution */
 	u32 width; /*Width of the active video frame*/

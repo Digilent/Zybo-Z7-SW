@@ -1,0 +1,3 @@
+domain_path: D:\PrjMig-Vitis_2024.1\repos\zybo-z7\sw\ws20250129112429\system_wrapper\export\system_wrapper\sw\domain_ps7_cortexa9_0
+app_src_dir: C:\Xilinx\Vitis\2024.1\data\embeddedsw\lib\sw_apps\hello_world
+template: hello_world

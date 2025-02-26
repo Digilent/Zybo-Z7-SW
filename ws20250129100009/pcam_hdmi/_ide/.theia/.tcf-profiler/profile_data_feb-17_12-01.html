@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<style>
+   table {
+      border-collapse: collapse;
+      border-spacing: 0;
+   }
+
+      table th, tr, td {
+         border-collapse: collapse;
+         padding: 2px;
+         table-layout: fixed;
+      }
+
+      table th {
+         background-color: darkslategray;
+         color: white;
+      }
+
+      table thead.details th {
+         background-color: lightslategray;
+         color: white;
+      }
+
+      h4.details {
+         margin: 4px;
+      }
+
+      td {
+         position: relative;
+      }
+
+      .bar {
+         position: absolute;
+         left: 0;
+         top: 0;
+         bottom: 0;
+         background-color: darkOrange;
+         z-index: -1;
+         opacity: .90;
+      }
+
+      div.details .bar {
+         position: absolute;
+         left: 0;
+         top: 0;
+         bottom: 0;
+         background-color: coral;
+         z-index: -1;
+         opacity: .90;
+      }
+
+      .button {
+         display: inline-block;
+         padding:0px;
+         font-size: 12px;
+         cursor: pointer;
+         text-align: center;
+         text-decoration: none;
+         outline: none;
+         color: black;
+         background-color: white;
+         border: none;
+         border-radius: 4px;
+      }
+
+      .button:hover {
+         background-color: lightsteelblue;
+      }
+
+       div.details {
+          border: solid 4px;
+         border-color: silver;
+         margin: 20px;
+         padding: 20px;
+         display: none;
+      }
+
+   </style>
+<script>
+   var expandText = "[+]";
+   var collapseText = "(-)";
+   var lastBtnElm;
+
+   function changeText(btnElm) {
+      if (btnElm.textContent == expandText) {
+         if (lastBtnElm != null) {
+            changeState(lastBtnElm, false);
+         }
+         changeState(btnElm, true);
+         lastBtnElm = btnElm
+      } else {
+         changeState(btnElm, false);
+      }
+   }
+
+   function changeState(btnElm, isSelected) {
+      var divId = btnElm.id + "-details";
+      var divElm = document.getElementById(divId);
+      if (isSelected) {
+         btnElm.textContent = collapseText;
+         btnElm.style.backgroundColor = "white";
+         if (divElm != null) {
+            divElm.style.display = "block";
+         }
+      } else {
+         btnElm.textContent = expandText;
+         btnElm.style.backgroundColor = "white";
+         if (divElm != null) {
+            divElm.style.display = "none";
+         }
+      }
+   }
+
+</script>
+<div id="main-div">
+   <table class="table" style="width: 100%;" border="1">
+      <thead>
+         <tr>
+            <th style="width: 10%;">Address</th>
+            <th style="width: 20%;">% Inclusive</th>
+            <th style="width: 20%;">% Exclusive</th>
+            <th style="width: 15%;">Function</th>
+            <th style="width: 15%;">File</th>
+            <th style="width: 10%;">Line</th>
+            <th style="width: 10%;">Details</th>
+         </tr>
+      </thead>
+   </table>
+</div>
+</html>

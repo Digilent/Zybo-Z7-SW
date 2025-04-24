@@ -16,7 +16,7 @@ public:
 	virtual void setBit(Bits) = 0;
 	virtual void clearBit(Bits bits) = 0;
 	virtual void commit() = 0;
-	virtual ~GPIO_Client() = default;
+	~GPIO_Client() = default;
 };
 
 } /* namespace digilent */

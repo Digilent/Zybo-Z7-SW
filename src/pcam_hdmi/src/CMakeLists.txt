@@ -1,0 +1,87 @@
+# Copyright (C) 2023 - 2024 Advanced Micro Devices, Inc.  All rights reserved.
+# SPDX-License-Identifier: MIT
+cmake_minimum_required(VERSION 3.16)
+
+# From working template
+include(${CMAKE_CURRENT_SOURCE_DIR}/Hello_worldExample.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/UserConfig.cmake)
+
+# App name
+set(APP_NAME pcam_hdmi)
+
+# Project name
+project(${APP_NAME})
+
+# Tools
+enable_language(C ASM CXX)
+find_package(common)
+
+# Default xil-libs
+collect(PROJECT_LIB_DEPS xilstandalone;xiltimer)
+
+
+
+# Default libs
+collect(PROJECT_LIB_DEPS xil)
+collect(PROJECT_LIB_DEPS gcc)
+collect(PROJECT_LIB_DEPS c)
+
+# Source files
+collect(PROJECT_LIB_SOURCES main.cc)
+collect(PROJECT_LIB_SOURCES ov5640/OV5640.cpp)
+collect(PROJECT_LIB_SOURCES platform.c)
+
+# Source files list
+collector_list(_sources PROJECT_LIB_SOURCES)
+
+foreach (source ${_sources})
+    get_filename_component(ext ${source} EXT)
+    list(APPEND src_ext ${ext})
+endforeach()
+
+find_project_type("${src_ext}" PROJECT_TYPE)
+
+if("${PROJECT_TYPE}" STREQUAL "c++")
+    collect(PROJECT_LIB_DEPS stdc++)
+endif()
+
+collector_list(_deps PROJECT_LIB_DEPS)
+list (APPEND _deps ${USER_LINK_LIBRARIES})
+
+if("${PROJECT_TYPE}" STREQUAL "c++")
+    string (REPLACE ";" ",-l" _deps "${_deps}")
+endif()
+
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+    set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
+    set(CMAKE_C_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
+endif()
+
+# Output files from linker
+linker_gen("${CMAKE_CURRENT_SOURCE_DIR}/linker_files/")
+
+# Default flags
+string(APPEND CMAKE_C_FLAGS ${USER_COMPILE_OPTIONS})
+string(APPEND CMAKE_CXX_FLAGS ${USER_COMPILE_OPTIONS})
+string(APPEND CMAKE_C_LINK_FLAGS ${USER_LINK_OPTIONS})
+string(APPEND CMAKE_CXX_LINK_FLAGS ${USER_LINK_OPTIONS})
+
+add_dependency_on_bsp(_sources)
+
+# Create .elf file
+add_executable(${APP_NAME}.elf ${_sources})
+set_target_properties(${APP_NAME}.elf PROPERTIES LINK_DEPENDS ${USER_LINKER_SCRIPT})
+target_link_libraries(${APP_NAME}.elf
+                      -Wl,-T -Wl,\"${USER_LINKER_SCRIPT}\"
+                      -L\"${CMAKE_SOURCE_DIR}/\"
+                      -L\"${CMAKE_LIBRARY_PATH}/\"
+                      -L\"${USER_LINK_DIRECTORIES}/\"
+                      -Wl,--start-group,-l${_deps} -Wl,--end-group
+                      )
+target_compile_definitions(${APP_NAME}.elf PUBLIC ${USER_COMPILE_DEFINITIONS})
+target_include_directories(${APP_NAME}.elf
+                           PUBLIC ${USER_INCLUDE_DIRECTORIES}
+                           "../../hw_pcam/hw/sdt/drivers/MIPI_D_PHY_RX_v1_0/src/"
+                           "../../hw_pcam/hw/sdt/drivers/MIPI_CSI_2_RX_v1_0/src/"
+                           )
+print_elf_size(CMAKE_SIZE ${APP_NAME})

@@ -24,8 +24,6 @@
 
 namespace digilent {
 
-
-
 using namespace std::placeholders;
 
 template <typename IrptCtl>
@@ -41,7 +39,7 @@ public:
 		pfn->operator()(StatusEvent);
 	}
 
-	PS_IIC(uint16_t dev_id, IrptCtl& irpt_ctl, uint32_t irpt_id, uint32_t sclk_rate_Hz) :
+	PS_IIC(uint32_t dev_id, IrptCtl& irpt_ctl, uint32_t irpt_id, uint32_t sclk_rate_Hz) :
 		drv_inst_(),
 		irpt_ctl_(irpt_ctl),
 		stat_handler_(std::bind(&PS_IIC::StatusHandler, this, _1))
@@ -67,18 +65,24 @@ public:
 			throw std::runtime_error(__FILE__ ":" LINE_STRING);
 		}
 
-	   Status = XIicPs_SetSClk(&drv_inst_, sclk_rate_Hz);
+	    Status = XIicPs_SetSClk(&drv_inst_, sclk_rate_Hz);
 		if (Status != XST_SUCCESS)
 		{
 			throw std::runtime_error(__FILE__ ":" LINE_STRING);
 		}
 
 		//Register the IIC handler with the interrupt controller
-		irpt_ctl_.registerHandler(irpt_id, reinterpret_cast<typename IrptCtl::Handler>(&XIicPs_MasterInterruptHandler), &drv_inst_);
-		irpt_ctl_.enableInterrupt(irpt_id);
+		irpt_ctl_.registerHandler(irpt_id,
+                                  reinterpret_cast<typename IrptCtl::Handler>(&XIicPs_MasterInterruptHandler),
+                                  &drv_inst_
+                                  );
+        irpt_ctl_.enableInterrupt(irpt_id);
 		irpt_ctl_.enableInterrupts();
 
-		XIicPs_SetStatusHandler	(&drv_inst_, &stat_handler_, &MyCallback<decltype(stat_handler_)>);
+		XIicPs_SetStatusHandler(&drv_inst_, 
+                                &stat_handler_, 
+                                &MyCallback<decltype(stat_handler_)>
+                                );
 	}
 
 	virtual void read(uint8_t addr, uint8_t* buf, size_t count) override
@@ -90,7 +94,7 @@ public:
 		XIicPs_MasterRecv(&drv_inst_, buf, count, addr);
 
 		// Wait till all the data is received.
-		while (!rx_complete_flag_ && !slave_nack_flag_ && !arb_lost_flag_ && !other_error_flag_) ;
+		while (!rx_complete_flag_ && !slave_nack_flag_ && !arb_lost_flag_ && !other_error_flag_);
 
 		if (slave_nack_flag_) throw TransmitError("Slave NACK");
 		if (arb_lost_flag_) throw TransmitError("Arbitration lost");
@@ -107,14 +111,14 @@ public:
 
 		XIicPs_MasterSend(&drv_inst_, buf_local.data(), buf_local.size(), addr);
 
-		while (!tx_complete_flag_ && !slave_nack_flag_ && !arb_lost_flag_ && !other_error_flag_) ;
+		while (!tx_complete_flag_ && !slave_nack_flag_ && !arb_lost_flag_ && !other_error_flag_);
 
 		if (slave_nack_flag_) throw TransmitError("Slave NACK");
 		if (arb_lost_flag_) throw TransmitError("Arbitration lost");
 		if (other_error_flag_) throw TransmitError("Other I2C error");
 	}
 
-	virtual ~PS_IIC() { }
+    ~PS_IIC() {}
 
 private:
 	void StatusHandler(int Event)

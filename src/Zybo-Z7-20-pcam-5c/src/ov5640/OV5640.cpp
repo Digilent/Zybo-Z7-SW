@@ -9,5 +9,6 @@
 
 namespace digilent {
 
+/* TODO: add here configs for IC */
 
 } /* namespace digilent */

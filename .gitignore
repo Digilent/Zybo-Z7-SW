@@ -1,8 +1,16 @@
 # ignore everything in workspace sub-dir
+
 /ws/*
+
 # except the cleanup scripts
+
 !/ws/cleanup.cmd
 !/ws/cleanup.sh
 
-#ignore Packages/ created by Vitis
+# ignore Packages/ and wsdata/ created by Vitis
+
 /Packages
+/.wsdata
+
+# ignore submodule(s)
+/scripts/*

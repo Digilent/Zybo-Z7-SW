@@ -11,7 +11,6 @@
 #include <stdexcept>
 
 #include "GPIO_Client.h"
-
 #include "xgpiops.h"
 
 namespace digilent {
@@ -20,8 +19,8 @@ template <typename IrptCtl>
 class PS_GPIO : public GPIO_Client
 {
 public:
-	PS_GPIO(uint16_t dev_id, IrptCtl& irpt_ctl, uint16_t irpt_id) :
-		drv_inst_(), irpt_ctl_(irpt_ctl)
+	PS_GPIO(uint32_t dev_id, IrptCtl& irpt_ctl, uint32_t irpt_id) :
+		drv_inst_(), irpt_ctl_(irpt_ctl), irpt_id_(irpt_id)
 	{
 		XGpioPs_Config* config = XGpioPs_LookupConfig(dev_id);
 		if (config == NULL) {
@@ -30,7 +29,11 @@ public:
 
 		XStatus Status;
 		//Initialize the GPIO driver
-		Status = XGpioPs_CfgInitialize(&drv_inst_, config, config->BaseAddr);
+		Status = XGpioPs_CfgInitialize(
+            &drv_inst_, 
+            config, 
+            config->BaseAddr
+        );
 		if (Status != XST_SUCCESS) {
 			throw std::runtime_error(__FILE__ ":" LINE_STRING);
 		}
@@ -40,11 +43,26 @@ public:
 			throw std::runtime_error(__FILE__ ":" LINE_STRING);
 		}
 
-		XGpioPs_SetOutputEnablePin(&drv_inst_, CAM_EN_PIN, 0);
-		XGpioPs_SetDirectionPin(&drv_inst_, CAM_EN_PIN, 1); //Output
-	   XGpioPs_WritePin(&drv_inst_, CAM_EN_PIN, 1);
-		XGpioPs_SetOutputEnablePin(&drv_inst_, CAM_EN_PIN, 1);
-
+		XGpioPs_SetOutputEnablePin(
+            &drv_inst_, 
+            CAM_EN_PIN, 
+            0
+        );
+		XGpioPs_SetDirectionPin(
+            &drv_inst_, 
+            CAM_EN_PIN, 
+            1
+        ); //Output
+	    XGpioPs_WritePin(
+            &drv_inst_, 
+            CAM_EN_PIN, 
+            1
+        );
+		XGpioPs_SetOutputEnablePin(
+            &drv_inst_, 
+            CAM_EN_PIN, 
+            1
+        );
 	}
 	virtual void setBit(Bits bits)
 	{
@@ -71,10 +89,10 @@ public:
 private:
 	XGpioPs drv_inst_;
 	IrptCtl irpt_ctl_;
+    u32 irpt_id_;
 	u32 const CAM_EN_PIN = 54;
 };
 
 }
-
 
 #endif /* PS_GPIO_H_ */

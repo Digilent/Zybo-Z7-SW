@@ -12,7 +12,6 @@
 #include <stdexcept>
 #include <vector>
 
-
 namespace digilent {
 
 class I2C_Client {

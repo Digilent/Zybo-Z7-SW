@@ -11,6 +11,3 @@
 
 /Packages
 /.wsdata
-
-# ignore submodule(s)
-/scripts/*

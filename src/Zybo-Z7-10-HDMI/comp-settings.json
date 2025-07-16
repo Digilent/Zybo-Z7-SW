@@ -5,6 +5,9 @@
 		"\"__clang__\""
 	],
 	"USER_INCLUDE_DIRECTORIES" : [],
+	"USER_COMPILE_SOURCES" : [
+		"\"video_demo.c\""
+	],
 	"USER_COMPILE_WARNINGS_ALL" : [
 		"-Wall"
 	],

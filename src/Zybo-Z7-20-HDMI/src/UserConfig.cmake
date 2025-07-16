@@ -27,6 +27,14 @@ set(USER_UNDEFINED_SYMBOLS
 
 set(USER_INCLUDE_DIRECTORIES
 )
+set(USER_COMPILE_SOURCES
+"video_demo.c"
+"display_ctrl.c"
+"dynclk.c"
+"intc.c"
+"timer_ps.c"
+"video_capture.c"
+)
 
 # -----------------------------------------
 

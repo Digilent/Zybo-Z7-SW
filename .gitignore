@@ -11,6 +11,4 @@
 
 /Packages
 /.wsdata
-
-# ignore submodule(s)
-/scripts/*
+dfx_runtime.txt

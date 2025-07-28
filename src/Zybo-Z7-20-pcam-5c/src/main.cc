@@ -100,10 +100,6 @@ int main()
 
 	while (1)
     {
-        // Reset cursor position
-        //xil_printf("\x1B[H");
-        // Clear terminal
-    	//xil_printf("\x1B[2J");
 		xil_printf("\r\n\r\n\r\nPcam 5C MAIN OPTIONS\r\n");
 		xil_printf("\r\nPlease press the key corresponding to the desired option:");
 		xil_printf("\r\n  a. Change Resolution");
@@ -114,7 +110,7 @@ int main()
 		xil_printf("\r\n  g. Change Gamma Correction Factor Value");
 		xil_printf("\r\n  h. Change AWB Settings\r\n\r\n");
 
-		read_char0 = getchar();
+		read_char0 = getchar(); getchar();
 		xil_printf("Read: %d\r\n", read_char0);
 
 		switch (read_char0) 
@@ -125,7 +121,7 @@ int main()
 			xil_printf("\r\n    2. 1920 x 1080, 15fps");
 			xil_printf("\r\n    3. 1920 x 1080, 30fps");
 
-			read_char1 = getchar();
+			read_char1 = getchar();  getchar();
 			xil_printf("\r\nRead: %d", read_char1);
 
 			switch (read_char1) 
@@ -166,13 +162,13 @@ int main()
 			break;
 
 		case 'b':
-			xil_printf("\r\n\r\nPlease enter value of liquid lens register, in hex, with small letters: 0x");
+			xil_printf("\r\n\r\nPlease enter value of liquid lens register, in hex, with small letters (2 nibbles): 0x");
 			//A, B, C,..., F need to be entered with small letters
 			while (read_char1 < 48) {
 				read_char1 = getchar();
 			}
 			while (read_char2 < 48) {
-				read_char2 = getchar();
+				read_char2 = getchar(); getchar();
 			}
 			// If character is a digit, convert from ASCII code to a digit between 0 and 9
 			if (read_char1 <= 57) {
@@ -190,7 +186,7 @@ int main()
 			else {
 				read_char2 -= 87;
 			}
-			//cam.writeRegLiquid((uint8_t) (16*read_char1 + read_char2));
+			cam.writeRegLiquid((uint8_t) (16*read_char1 + read_char2));
 			xil_printf("\r\nWrote to liquid lens controller: %x", (uint8_t) (16*read_char1 + read_char2));
 			break;
 
@@ -199,17 +195,17 @@ int main()
 			xil_printf("\r\n    1. Select image format to be RGB, output still Raw");
 			xil_printf("\r\n    2. Select image format & output to both be Raw");
 			
-            read_char1 = getchar();
+            read_char1 = getchar(); getchar();
 			xil_printf("\r\nRead: %d", read_char1);
 			
             switch (read_char1) 
             {
 			case '1':
-				//cam.set_isp_format(OV5640_cfg::isp_format_t::ISP_RGB);
+				cam.set_isp_format(OV5640_cfg::isp_format_t::ISP_RGB);
 				xil_printf("Settings change done.\r\n");
 				break;
 			case '2':
-				//cam.set_isp_format(OV5640_cfg::isp_format_t::ISP_RAW);
+				cam.set_isp_format(OV5640_cfg::isp_format_t::ISP_RAW);
 				xil_printf("Settings change done.\r\n");
 				break;
 			default:
@@ -218,7 +214,7 @@ int main()
 			break;
 
 		case 'e':
-			xil_printf("\r\nPlease enter address of image sensor register, in hex, with small letters: \r\n");
+			xil_printf("\r\nPlease enter address of image sensor register, in hex, with small letters (4 nibbles): \r\n");
 			//A, B, C,..., F need to be entered with small letters
 			while (read_char1 < 48) {
 				read_char1 = getchar();
@@ -230,7 +226,7 @@ int main()
 				read_char4 = getchar();
 			}
 			while (read_char5 < 48) {
-				read_char5 = getchar();
+				read_char5 = getchar(); getchar();
 			}
 			// If character is a digit, convert from ASCII code to a digit between 0 and 9
 			if (read_char1 <= 57) {
@@ -269,13 +265,13 @@ int main()
 
 			read_char1 = 0;
 			read_char2 = 0;
-			xil_printf("\r\nPlease enter value of image sensor register, in hex, with small letters: \r\n");
+			xil_printf("\r\nPlease enter value of image sensor register, in hex, with small letters (2 nibbles): \r\n");
 			//A, B, C,..., F need to be entered with small letters
 			while (read_char1 < 48) {
 				read_char1 = getchar();
 			}
 			while (read_char2 < 48) {
-				read_char2 = getchar();
+				read_char2 = getchar(); getchar();
 			}
 			// If character is a digit, convert from ASCII code to a digit between 0 and 9
 			if (read_char1 <= 57) {
@@ -301,7 +297,7 @@ int main()
 			break;
 
 		case 'f':
-			xil_printf("Please enter address of image sensor register, in hex, with small letters: \r\n");
+			xil_printf("Please enter address of image sensor register, in hex, with small letters (4 nibbles): \r\n");
 			//A, B, C,..., F need to be entered with small letters
 			while (read_char1 < 48) {
 				read_char1 = getchar();
@@ -313,7 +309,7 @@ int main()
 				read_char4 = getchar();
 			}
 			while (read_char5 < 48) {
-				read_char5 = getchar();
+				read_char5 = getchar(); getchar();
 			}
 			// If character is a digit, convert from ASCII code to a digit between 0 and 9
 			if (read_char1 <= 57) {
@@ -362,7 +358,7 @@ int main()
 			xil_printf("    4. Gamma Factor = 1/1.8\r\n");
 			xil_printf("    5. Gamma Factor = 1/2.2\r\n");
 			
-            read_char1 = getchar();
+            read_char1 = getchar(); getchar();
 
 			xil_printf("Read: %d\r\n", read_char1);
             // Convert from ASCII to numeric
@@ -382,7 +378,7 @@ int main()
 			xil_printf("    2. Enable Simple AWB\r\n");
 			xil_printf("    3. Disable AWB\r\n");
 			
-            read_char1 = getchar();
+            read_char1 = getchar(); getchar();
 			
             xil_printf("Read: %d\r\n", read_char1);
 			
@@ -436,9 +432,7 @@ uint8_t dGetChar()
     while (XUartPs_IsReceiveData(UART_BASEADDR))
     {
         chRxCh = XUartPs_ReadReg(UART_BASEADDR, XUARTPS_FIFO_OFFSET);
-        if (chRxCh != '0' &&
-            XUartPs_ReadReg(UART_BASEADDR, XUARTPS_FIFO_OFFSET) == '\n'
-            )
+        if (chRxCh == '\n')
         {
             break;
         }

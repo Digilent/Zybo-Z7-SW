@@ -365,7 +365,7 @@ int main()
 			read_char1 = read_char1 - 48;
 			if ((read_char1 > 0) && (read_char1 < 6)) {
 				Xil_Out32(GAMMA_BASE_ADDR, read_char1-1);
-				xil_printf("Gamma value changed to 1.\r\n");
+				xil_printf("Gamma value changed to option %d.\r\n", read_char1);
 			}
 			else {
 				xil_printf("  Selection is outside the available options! Please retry...\r\n");

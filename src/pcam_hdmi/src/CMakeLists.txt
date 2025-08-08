@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 # From working template
-include(${CMAKE_CURRENT_SOURCE_DIR}/Hello_worldExample.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/Empty_applicationExample.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/UserConfig.cmake)
 
 # App name

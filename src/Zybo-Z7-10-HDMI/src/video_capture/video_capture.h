@@ -1,3 +1,5 @@
+#ifndef VIDEO_CAPTURE_H
+#define VIDEO_CAPTURE_H
 /******************************************************************************
  * @file video_capture.h
  * Digilent Video Capture Driver
@@ -63,9 +65,6 @@
  * </pre>
  *
  *****************************************************************************/
-
-#ifndef VIDEO_CAPTURE_H_
-#define VIDEO_CAPTURE_H_
 
 /* ------------------------------------------------------------ */
 /*				Include File Definitions						*/
@@ -147,17 +146,18 @@ typedef struct {
 /* ------------------------------------------------------------ */
 /*					Variable Declarations						*/
 /* ------------------------------------------------------------ */
-
 /* ------------------------------------------------------------ */
 /*					Procedure Declarations						*/
 /* ------------------------------------------------------------ */
 
 int VideoStop(VideoCapture *videoPtr);
 int VideoStart(VideoCapture *videoPtr);
-int VideoInitialize(VideoCapture *videoPtr, INTC *intCtrl, XAxiVdma *vdma, u32 gpioId, u32 vtcId, u32 vtcIrptId, u8 *framePtr[VIDEO_NUM_FRAMES], u32 stride, u32 startOnDet);
+int VideoInitialize(VideoCapture *videoPtr, XScuGic *intCtrl, XAxiVdma *vdma,
+                    u32 gpioId, u32 vtcId, u32 vtcIrptId,
+                    u8 *framePtr[VIDEO_NUM_FRAMES], u32 stride, u32 startOnDet);
 int VideoChangeFrame(VideoCapture *videoPtr, u32 frameIndex);
 void VideoSetCallback(VideoCapture *videoPtr, VideoCallBack CallBackFunc, void *CallBackRef);
-void GpioIsr(void *InstancePtr);
+void GpioIsr(void *CallBackRef);
 void VtcIsr(void *InstancePtr, u32 pendingIrpt);
 int SetupInterruptSystem(VideoCapture *videoPtr);
 
@@ -166,4 +166,3 @@ int SetupInterruptSystem(VideoCapture *videoPtr);
 /************************************************************************/
 
 #endif /* VIDEO_CAPTURE_H_ */
-

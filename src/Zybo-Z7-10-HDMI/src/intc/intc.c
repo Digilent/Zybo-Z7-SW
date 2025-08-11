@@ -53,9 +53,11 @@
 
 #include "intc.h"
 #include "xparameters.h"
+#include "xinterrupt_wrap.h"
 
 XStatus fnInitInterruptController(INTC *psIntc)
 {
+
 #ifdef XPAR_INTC_0_DEVICE_ID
 
 	// Init driver instance
@@ -71,13 +73,14 @@ XStatus fnInitInterruptController(INTC *psIntc)
 	 * Initialize the interrupt controller driver so that it is ready to
 	 * use.
 	 */
-	IntcConfig = XScuGic_LookupConfig(INTC_DEVICE_ID);
+	IntcConfig = XScuGic_LookupConfig(XPAR_XSCUGIC_0_BASEADDR);
 	if (NULL == IntcConfig) {
 		return XST_FAILURE;
 	}
 
 	RETURN_ON_FAILURE(XScuGic_CfgInitialize(psIntc, IntcConfig,
-					IntcConfig->CpuBaseAddress));
+					XPAR_XSCUGIC_0_BASEADDR));
+
 #endif
 
 	return XST_SUCCESS;

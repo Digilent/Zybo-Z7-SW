@@ -250,6 +250,7 @@ int VideoInitialize(VideoCapture *videoPtr, INTC *intCtrl, XAxiVdma *vdma, u32 g
 {
 	int Status;
 	int i;
+	XGpio_Config *GpioConfigPtr;
 
 	/*
 	 * Initialize all the fields in the VideoCapture struct
@@ -281,11 +282,25 @@ int VideoInitialize(VideoCapture *videoPtr, INTC *intCtrl, XAxiVdma *vdma, u32 g
 
 	/* Initialize the GPIO driver. If an error occurs then exit */
 
-	xdbg_printf(XDBG_DEBUG_GENERAL, "Video Init started\n\r");
-	Status = XGpio_Initialize(&videoPtr->gpio, gpioId);
+	xdbg_printf(XDBG_DEBUG_GENERAL, "Video Init started.\n\r");
+
+	GpioConfigPtr = XGpio_LookupConfig(gpioId);
+
+	Status = XGpio_Initialize(&videoPtr->gpio, GpioConfigPtr->BaseAddress);
 	if (Status != XST_SUCCESS)
 	{
-		xdbg_printf(XDBG_DEBUG_GENERAL, "XGPIO Init failed\n\r");
+		xdbg_printf(XDBG_DEBUG_GENERAL, "XGPIO Init failed.\n\r");
+		return XST_FAILURE;
+	}
+
+	Status = XSetupInterruptSystem(videoPtr, &GpioIsr,
+				       GpioConfigPtr->IntrId,
+				       GpioConfigPtr->IntrParent,
+				       XINTERRUPT_DEFAULT_PRIORITY);
+
+	if (Status != XST_SUCCESS)
+	{
+		xdbg_printf(XDBG_DEBUG_GENERAL, "XGPIO XSetupInterruptSystem failed.\n\r");
 		return XST_FAILURE;
 	}
 
@@ -406,20 +421,25 @@ void GpioIsr(void *InstancePtr)
 	XGpio_InterruptClear(GpioPtr, XGPIO_IR_CH2_MASK);
 
 	locked = XGpio_DiscreteRead(GpioPtr, 2);
+	vtcConfig = XVtc_LookupConfig(videoPtr->vtcId);
+	if (NULL == vtcConfig){
+		return;
+	}
+
+	Status = XVtc_CfgInitialize(&(videoPtr->vtc), vtcConfig, vtcConfig->BaseAddress);
+	if (Status != (XST_SUCCESS)){
+		return;
+	}
+
+	XVtc_SelfTest(&(videoPtr->vtc));
 
 	//xil_printf("~");
 	if (locked)
 	{
-		vtcConfig = XVtc_LookupConfig(videoPtr->vtcId);
-		if (NULL == vtcConfig)
-			return;
-
-		Status = XVtc_CfgInitialize(&(videoPtr->vtc), vtcConfig, vtcConfig->BaseAddress);
-		if (Status != (XST_SUCCESS))
-			return;
-
-		XVtc_SelfTest(&(videoPtr->vtc));
-
+		XSetupInterruptSystem(videoPtr, &VtcIsr,
+							vtcConfig->IntrId,
+							vtcConfig->IntrParent,
+							XINTERRUPT_DEFAULT_PRIORITY);
 		XVtc_RegUpdateEnable(&(videoPtr->vtc));
 		XVtc_SetCallBack(&(videoPtr->vtc), XVTC_HANDLER_LOCK, VtcIsr, videoPtr);
 		XVtc_IntrEnable(&(videoPtr->vtc), 0x100);
@@ -428,7 +448,8 @@ void GpioIsr(void *InstancePtr)
 		/*
 		 * TODO: Add Preprocessor check for microblaze
 		 */
-		XScuGic_Enable(videoPtr->intc, videoPtr->vtcIrptId);
+		// XScuGic_Enable(videoPtr->intc, videoPtr->vtcIrptId);
+		XEnableIntrId(vtcConfig->IntrId, vtcConfig->IntrParent);
 	}
 	else
 	{
@@ -443,7 +464,8 @@ void GpioIsr(void *InstancePtr)
 		 * stable then the processor will throw a data abort exception. This is also why we
 		 * are disabling the interrupt in the first place, because VtcIsr accesses VTC registers.
 		 */
-		XScuGic_Disable(videoPtr->intc, videoPtr->vtcIrptId);
+		// XScuGic_Disable(videoPtr->intc, videoPtr->vtcIrptId);
+		XDisableIntrId(vtcConfig->IntrId, vtcConfig->IntrParent);
 		if (videoPtr->callBack != NULL && videoPtr->state != VIDEO_DISCONNECTED)
 			videoPtr->callBack(videoPtr->callBackRef, (void *) videoPtr);
 		videoPtr->state = VIDEO_DISCONNECTED;

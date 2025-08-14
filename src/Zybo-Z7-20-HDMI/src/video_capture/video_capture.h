@@ -76,6 +76,7 @@
 #include "xvtc.h"
 #include "xgpio.h"
 #include "../intc/intc.h"
+#include "xinterrupt_wrap.h"
 
 /* ------------------------------------------------------------ */
 /*					Miscellaneous Declarations					*/

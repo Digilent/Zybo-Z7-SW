@@ -40,5 +40,5 @@
 		"\"${CMAKE_SOURCE_DIR}/lscript.ld\""
 	],
 	"USER_LINK_OTHER_FLAGS" : [],
-	"Zybo-Z7-20-HDMI" : "src\\design_1_wrappe\\design_1_wrappe.xsa"
+	"Zybo-Z7-20-HDMI" : "src\\design_1_wrapper\\design_1_wrapper.xsa"
 }

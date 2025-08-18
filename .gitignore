@@ -6,3 +6,4 @@
 
 #ignore Packages/ created by Vitis
 /Packages
+dfx_runtime.txt

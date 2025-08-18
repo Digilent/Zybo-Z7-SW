@@ -135,7 +135,7 @@ void DemoInitialize()
 	/*
 	 * Initialize the Display controller and start it
 	 */
-	Status = DisplayInitialize(&dispCtrl, &vdma, 0, DYNCLK_BASEADDR, pFrames, DEMO_STRIDE);
+	Status = DisplayInitialize(&dispCtrl, &vdma, HDMI_OUT_VTC_BASEADDR, DYNCLK_BASEADDR, pFrames, DEMO_STRIDE);
 	if (Status != XST_SUCCESS)
 	{
 		xil_printf("Display Ctrl initialization failed during demo initialization%d\r\n", Status);
